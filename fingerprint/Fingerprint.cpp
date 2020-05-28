@@ -12,6 +12,14 @@
 
 #include <fingerprint.sysprop.h>
 
+#include <inttypes.h>
+#include <poll.h>
+#include <unistd.h>
+
+#include <thread>
+
+#define FOD_UI_PATH "/sys/devices/platform/soc/soc:qcom,dsi-display-primary/fod_ui"
+
 using namespace ::android::fingerprint::nothing;
 
 using ::android::base::ParseInt;
@@ -34,6 +42,25 @@ constexpr char FW_VERSION[] = "1.01";
 constexpr char SERIAL_NUMBER[] = "00000001";
 constexpr char SW_COMPONENT_ID[] = "matchingAlgorithm";
 constexpr char SW_VERSION[] = "vendor/version/revision";
+
+static bool readBool(int fd) {
+    char c;
+    int rc;
+
+    rc = lseek(fd, 0, SEEK_SET);
+    if (rc) {
+        ALOGE("failed to seek fd, err: %d", rc);
+        return false;
+    }
+
+    rc = read(fd, &c, sizeof(char));
+    if (rc != 1) {
+        ALOGE("failed to read bool from fd, err: %d", rc);
+        return false;
+    }
+
+    return c != '0';
+}
 }  // namespace
 
 static Fingerprint* sInstance;
@@ -50,6 +77,30 @@ Fingerprint::Fingerprint()
     if (!mDevice) {
         ALOGE("Can't open HAL module");
     }
+
+    std::thread([this]() {
+        int fd = open(FOD_UI_PATH, O_RDONLY);
+        if (fd < 0) {
+            ALOGE("failed to open fd, err: %d", fd);
+            return;
+        }
+
+        struct pollfd fodUiPoll = {
+                .fd = fd,
+                .events = POLLERR | POLLPRI,
+                .revents = 0,
+        };
+
+        while (true) {
+            int rc = poll(&fodUiPoll, 1, -1);
+            if (rc < 0) {
+                ALOGE("failed to poll fd, err: %d", rc);
+                continue;
+            }
+
+            mDevice->goodixExtCmd(mDevice, readBool(fd) ? 1 : 0, 0);
+        }
+    }).detach();
 
     std::string sensorTypeProp = FingerprintHalProperties::type().value_or("");
     if (sensorTypeProp == "" || sensorTypeProp == "default" || sensorTypeProp == "rear")
