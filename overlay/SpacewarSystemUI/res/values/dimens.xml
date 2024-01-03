@@ -31,4 +31,9 @@
 
     <!-- For burn-in protection -->
     <dimen name="status_bar_offset_max_y">2dp</dimen>
+
+    <!-- The position of the volume dialog on the screen.
+         See com.android.systemui.volume.VolumeDialogImpl.
+         Value 19 corresponds to LEFT|CENTER_VERTICAL. -->
+    <integer name="volume_dialog_gravity">19</integer>
 </resources>

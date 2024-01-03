@@ -3,9 +3,6 @@
     <!-- Doze: does this device support STATE_DOZE?  -->
     <bool name="doze_display_state_supported">true</bool>
 
-    <!-- Set audio panel to the left side -->
-    <bool name="config_audioPanelOnLeftSide">true</bool>
-
     <item name="pixel_pitch" format="float" type="dimen">61.2</item>
 
     <color name="config_udfpsColor">#24dcff</color>
