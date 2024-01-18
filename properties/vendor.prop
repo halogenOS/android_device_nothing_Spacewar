@@ -62,6 +62,10 @@ vendor.voice.path.for.pcm.voip=true
 # APK Verity
 ro.apk_verity.mode=2
 
+# Biometrics
+ro.vendor.fingerprint.type=udfps_optical
+ro.vendor.fingerprint.sensor_location=540|2170|98
+
 # Bluetooth
 persist.vendor.bt.a2dp_offload_cap=sbc-aptx-aptxtws-aptxhd-aac-ldac
 persist.vendor.bt.aac_frm_ctl.enabled=true
