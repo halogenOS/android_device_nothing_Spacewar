@@ -6,32 +6,38 @@
 //
 
 cc_binary {
-    name: "android.hardware.biometrics.fingerprint@2.3-service.nothing",
-    defaults: ["hidl_defaults"],
-    init_rc: ["android.hardware.biometrics.fingerprint@2.3-service.nothing.rc"],
-    vintf_fragments: ["android.hardware.biometrics.fingerprint@2.3-service.nothing.xml"],
+    name: "android.hardware.biometrics.fingerprint-service.nothing",
+    init_rc: ["android.hardware.biometrics.fingerprint-service.nothing.rc"],
+    vintf_fragments: ["android.hardware.biometrics.fingerprint-service.nothing.xml"],
+    local_include_dirs: ["include"],
     vendor: true,
     relative_install_path: "hw",
     srcs: [
-        "BiometricsFingerprint.cpp",
-        "UdfpsHandler.cpp",
+        "CancellationSignal.cpp",
+        "Fingerprint.cpp",
+        "LockoutTracker.cpp",
+        "Session.cpp",
         "service.cpp",
     ],
-
     shared_libs: [
         "libbase",
+        "libbinder_ndk",
         "libcutils",
+        "libhardware",
         "libdl",
         "liblog",
-        "libhidlbase",
-        "libhardware",
-        "libutils",
-        "android.hardware.biometrics.fingerprint@2.1",
-        "android.hardware.biometrics.fingerprint@2.2",
-        "android.hardware.biometrics.fingerprint@2.3",
+        "android.hardware.biometrics.fingerprint-V4-ndk",
+        "android.hardware.biometrics.common-V4-ndk",
+        "android.hardware.biometrics.common.util",
     ],
+    static_libs: ["libandroid.hardware.biometrics.fingerprint.NothingProps"],
+}
 
-    header_libs: ["nothingfingerprint_headers"],
+sysprop_library {
+    name: "android.hardware.biometrics.fingerprint.NothingProps",
+    srcs: ["fingerprint.sysprop"],
+    property_owner: "Vendor",
+    vendor: true,
 }
 
 cc_library_headers {
