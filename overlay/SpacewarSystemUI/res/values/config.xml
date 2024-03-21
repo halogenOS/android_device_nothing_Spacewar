@@ -9,4 +9,9 @@
     <bool name="config_statusBarBurnInProtection">true</bool>
 
     <color name="config_udfpsColor">#00b4e7</color>
+
+    <!-- Set audio panel to the left side -->
+    <bool name="config_audioPanelOnLeftSide">true</bool>
+    <integer name="volume_dialog_gravity">19</integer>
+
 </resources>
