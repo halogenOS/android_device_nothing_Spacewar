@@ -96,6 +96,10 @@ dalvik.vm.image-dex2oat-threads=8
 persist.vendor.dpm.idletimer.mode=default
 persist.vendor.dpmhalservice.enable=1
 
+# Fling velocities
+ro.min.fling_velocity=140
+ro.max.fling_velocity=19200
+
 # FRP
 ro.frp.pst=/dev/block/bootdevice/by-name/frp
 
