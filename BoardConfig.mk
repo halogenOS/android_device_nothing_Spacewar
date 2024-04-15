@@ -219,5 +219,7 @@ WPA_SUPPLICANT_VERSION := VER_0_8_X
 CONFIG_IEEE80211AC := true
 CONFIG_IEEE80211AX := true
 
+DEVICE_MAINTAINER := Simao Gomes Viana (superboringdev/xdevs23)
+
 # Include the proprietary files BoardConfig.
 include vendor/nothing/Spacewar/BoardConfigVendor.mk
