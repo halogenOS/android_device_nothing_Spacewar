@@ -7,4 +7,6 @@
     <integer name="config_cpuTempDivider" translatable="false">1000</integer>
 
     <bool name="config_statusBarBurnInProtection">true</bool>
+
+    <color name="config_udfpsColor">#00b4e7</color>
 </resources>
