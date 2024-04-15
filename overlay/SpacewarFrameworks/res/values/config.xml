@@ -738,6 +738,8 @@
     <!-- Enable Zram writeback feature to allow unused pages in zram be written to flash. -->
     <bool name="config_zramWriteback">false</bool>
 
+    <string name="config_stockFingerprint">Nothing/Spacewar/Spacewar:12/SKQ1.211230.001/1666412462:user/release-keys</string>
+
     <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
     <string name="config_netflixSpoofModel" translatable="false">M2101K9G</string>
 </resources>
