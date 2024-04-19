@@ -1,0 +1,17 @@
+[
+  {
+    "repository": "android_kernel_nothing_sm7325",
+    "target_path": "kernel/nothing/sm7325",
+    "branch": "XOS-14.0"
+  },
+  {
+    "repository": "android_hardware_nothing",
+    "target_path": "hardware/nothing",
+    "branch": "XOS-14.0"
+  },
+  {
+    "repository": "android_proprietary_vendor_nothing_Spacewar",
+    "target_path": "vendor/nothing/Spacewar",
+    "branch": "XOS-14.0"
+  }
+]
