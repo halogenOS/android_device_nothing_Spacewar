@@ -1,11 +1,12 @@
 #
 # Copyright (C) 2018-2021 PixysOS
+# Copyright (C) 2024 The halogenOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 # Setup dalvik vm configs
-$(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-xhdpi-8192-dalvik-heap.mk)
 
 # Get non-open-source specific aspects
 $(call inherit-product, vendor/nothing/Spacewar/Spacewar-vendor.mk)
@@ -13,17 +14,9 @@ $(call inherit-product, vendor/nothing/Spacewar/Spacewar-vendor.mk)
 # Storage
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
-# NT Camera
-$(call inherit-product, vendor/nothing/camera/nothing-camera.mk)
-
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay
-
-# RRO (pixys)
-PRODUCT_PACKAGES += \
-    PixysFrameworksSpacewar \
-    PixysSystemUISpacewar
 
 # RRO (Spacewar)
 PRODUCT_PACKAGES += \
