@@ -736,7 +736,7 @@
     <bool name="config_spatial_audio_head_tracking_enabled_default">true</bool>
 
     <!-- Enable Zram writeback feature to allow unused pages in zram be written to flash. -->
-    <bool name="config_zramWriteback">true</bool>
+    <bool name="config_zramWriteback">false</bool>
 
     <!-- Device model (Build.MODEL) to spoof for netflix, if not empty -->
     <string name="config_netflixSpoofModel" translatable="false">M2101K9G</string>
