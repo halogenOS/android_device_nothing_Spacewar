@@ -10,7 +10,7 @@
     "branch": "XOS-14.0"
   },
   {
-    "repository": "android_proprietary_vendor_nothing_Spacewar",
+    "repository": "android_vendor_nothing_Spacewar",
     "target_path": "vendor/nothing/Spacewar",
     "branch": "XOS-14.0"
   }
