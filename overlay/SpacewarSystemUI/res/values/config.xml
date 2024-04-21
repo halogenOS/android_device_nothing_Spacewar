@@ -8,7 +8,7 @@
 
     <bool name="config_statusBarBurnInProtection">true</bool>
 
-    <color name="config_udfpsColor">#00b4e7</color>
+    <color name="config_udfpsColor">#12c6f9</color>
 
     <!-- Set audio panel to the left side -->
     <bool name="config_audioPanelOnLeftSide">true</bool>
