@@ -1,4 +1,4 @@
-# All unpinned blobs are extracted from Spacewar-U2.5-240301-1852
+# All unpinned blobs are extracted from Spacewar-U2.5-240419-1617
 
 # ACDB
 vendor/etc/acdbdata/QRD/QRD_Bluetooth_cal.acdb
@@ -279,11 +279,11 @@ vendor/etc/lvacfs_params/4mic/LVIMFS_Parameter_xxxx_ID4_MIC_Cam_back.txt
 vendor/etc/lvacfs_params/4mic/audiozoom_13.txt
 vendor/etc/lvacfs_params/4mic/audiozoom_4.txt
 
-# Audio (Spatial) - from tangorpro-user-14-UQ1A.231205.015
-vendor/lib/aoc_audio_stereo_spatializer.so|f443a38e4c5654966dbcc89673ade51c0e27eea3
-vendor/lib/soundfx/libspatialaudio.so|1903f9c98b38728970ddd12094fa15d96e9d2a5b
-vendor/lib64/aoc_audio_stereo_spatializer.so|45c5055d36c51e2756089ee3e4c02bc204b93402
-vendor/lib64/soundfx/libspatialaudio.so|0242ecf82a322d6654d859123d4dd221c3c2bf12
+# Audio (Spatial) - from tangorpro-user-14-AP1A.240305.019.A1
+vendor/lib/aoc_audio_stereo_spatializer.so|f715e32bbae5b935d14db110f33de17589ecfd04
+vendor/lib/soundfx/libspatialaudio.so|f6b3bfb39ef6ad709494d016f28fd057d79b6085
+vendor/lib64/aoc_audio_stereo_spatializer.so|8b6e72d78cc1c1ea20ccffcdb8cd42e8062c78e4
+vendor/lib64/soundfx/libspatialaudio.so|7653a31d0d374800cb3c078b88e2937d3ef0bdb0
 
 # Bluetooth
 vendor/bin/hw/android.hardware.bluetooth@1.0-service-qti
@@ -650,12 +650,10 @@ system/etc/sysconfig/preinstalled-packages-dirac.xml
 system/priv-app/DiracAudioControlService/DiracAudioControlService.apk
 system/priv-app/DiracAudioControlService_DMP/DiracAudioControlService_DMP.apk
 system/priv-app/NothingDiracService/NothingDiracService.apk
-vendor/etc/dirac/interfacedb
-vendor/etc/diracmobile.config
-vendor/etc/diracvdd.bin
-vendor/lib/libDiracAPI_SHARED.so
-vendor/lib/libdiracapwrapper.so
-vendor/lib/soundfx/libdiraceffect.so
+vendor/etc/dirac/dirac_resource.dar
+vendor/etc/dirac/interface.json
+vendor/lib/libdirac.so
+vendor/lib/soundfx/libdiraceffect-afm.so
 
 # Display Calibration data
 vendor/etc/qdcm_calib_data_rm692e5_amoled_fhd+_120hz_cmd_mode_dsi_visionox_panel.xml
@@ -942,11 +940,11 @@ vendor/firmware/a660_zap.mdt
 vendor/lib/hw/vulkan.adreno.so
 vendor/lib64/hw/vulkan.adreno.so
 
-# HotwordEnrollment
-product/priv-app/HotwordEnrollmentOKGoogleHEXAGON/HotwordEnrollmentOKGoogleHEXAGON.apk
-product/priv-app/HotwordEnrollmentXGoogleHEXAGON/HotwordEnrollmentXGoogleHEXAGON.apk
-system_ext/etc/permissions/com.android.hotwordenrollment.common.util.xml
-system_ext/framework/com.android.hotwordenrollment.common.util.jar
+# HotwordEnrollment - from from U2.5-240119-1910
+product/priv-app/HotwordEnrollmentOKGoogleHEXAGON/HotwordEnrollmentOKGoogleHEXAGON.apk|3b645024a832587473af1a758d5cf86470b3a030
+product/priv-app/HotwordEnrollmentXGoogleHEXAGON/HotwordEnrollmentXGoogleHEXAGON.apk|3441668e28368b9f86e7edc78c70fe042d686f6b
+system_ext/etc/permissions/com.android.hotwordenrollment.common.util.xml|99cfd80965c170f4885a7dd62c0eaad1a0c7840f
+system_ext/framework/com.android.hotwordenrollment.common.util.jar|e324dc627177f92a4f289e302bbbea581720cbde
 
 # IMS - from LA.QSSI.13.0.r1-05300-qssi.0
 system_ext/lib64/vendor.qti.imsrtpservice@3.1.so|d1b6a6eabf17e43e98dcc4372fdabea4890f7cd8
@@ -1369,6 +1367,7 @@ vendor/lib64/qcrild_libqcrilnrutils.so|8fbc7b5ffcdf397a2c8fa3f46e6c107186d22211
 vendor/lib64/qtiril-utils.so|86578a04d450dea8e1589e1818553a265eeb78a7
 vendor/lib64/qtiwakelock.so|443804f2b7c5f5c0e707da18e77289156413f56e
 vendor/lib64/vendor.qti.hardware.radio.am@1.0.so|fa4e3dcb1367f4dce386ab0a91a549c4b8193615
+vendor/lib64/vendor.qti.hardware.radio.atcmdfwd@1.0.so|58f9c029bf75711b37ebfb3b733a3508ed8cad39
 vendor/lib64/vendor.qti.hardware.radio.ims@1.0.so|df89f9182175c160553dc84cafe149dba42fe4a9
 vendor/lib64/vendor.qti.hardware.radio.ims@1.1.so|63b5b7cf2a66dc714a01140fb2beacfed830ab30
 vendor/lib64/vendor.qti.hardware.radio.ims@1.2.so|4b5ce03bb4c4e14dfd95a6dced2244700f327e08
@@ -1391,14 +1390,13 @@ vendor/lib64/vendor.qti.hardware.radio.qtiradio@2.4.so|5ff555c1f6c6e82ab21f6cb4f
 vendor/lib64/vendor.qti.hardware.radio.qtiradio@2.5.so|68b7e74a999bb391621a677e65ce638a4e850d4a
 vendor/lib64/vendor.qti.hardware.radio.qtiradio@2.6.so|61ca1281c023e7e3359bb26609693d3d577813a5
 vendor/lib64/vendor.qti.hardware.radio.qtiradio@2.7.so|b375c29b1961bd00a5619e7430bc8f5d841b4b14
+vendor/lib64/vendor.qti.hardware.radio.uim@1.0.so|b3a7ab5604d8f3d15806580be4be410db83e9730
+vendor/lib64/vendor.qti.hardware.radio.uim@1.1.so|39343fa0745f4d0786160f3550b81948b8d75a7e
+vendor/lib64/vendor.qti.hardware.radio.uim@1.2.so|0c88d5d9b1a72a67f40a34bf65eefbf7045c1d6a
 vendor/lib64/vendor.qti.hardware.radio.uim_remote_client@1.0.so|8ffcd1a0e478f46d17f659db679983c78113fe79
 vendor/lib64/vendor.qti.hardware.radio.uim_remote_client@1.1.so|444b879c119a74cda4784ab27fa4ccb853b2ae2b
 vendor/lib64/vendor.qti.hardware.radio.uim_remote_client@1.2.so|5bd93b3461b37c9ec7b10ae14b83781eb7556b27
 vendor/lib64/vendor.qti.hardware.radio.uim_remote_server@1.0.so|cf9e2e22271a4091ba3c4c636ffc55f0d571ca42
-vendor/lib64/vendor.qti.hardware.radio.uim@1.0.so|b3a7ab5604d8f3d15806580be4be410db83e9730
-vendor/lib64/vendor.qti.hardware.radio.uim@1.1.so|39343fa0745f4d0786160f3550b81948b8d75a7e
-vendor/lib64/vendor.qti.hardware.radio.uim@1.2.so|0c88d5d9b1a72a67f40a34bf65eefbf7045c1d6a
-vendor/lib64/vendor.qti.hardware.radio.atcmdfwd@1.0.so|58f9c029bf75711b37ebfb3b733a3508ed8cad39
 
 # Sensors
 vendor/bin/hw/vendor.qti.hardware.sensorscalibrate@1.0-service

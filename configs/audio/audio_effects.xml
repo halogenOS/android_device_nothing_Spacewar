@@ -45,7 +45,7 @@
         <library name="audiosphere" path="libasphere.so"/>
         <library name="shoebox" path="libshoebox.so"/>
         <!-- add for dirac support -->
-        <library name="dirac_gef" path="libdiraceffect.so"/>
+        <library name="dirac_gef" path="libdiraceffect-afm.so"/>
         <!-- add for dirac support -->
         <library name="spatializer" path="libspatialaudio.so"/>
     </libraries>
