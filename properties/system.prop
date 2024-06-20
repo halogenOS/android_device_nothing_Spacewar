@@ -95,6 +95,5 @@ persist.debug.wfd.enable=1
 
 # Nt Feature
 ro.build.nothing.feature.base=0x104b4247b9fff
-ro.build.nothing.feature.diff.device.Spacewar=0x41a032c34000
-ro.build.nothing.feature.diff.product.Spacewar=0x0
-ro.build.nothing.feature.diff.product.SpacewarEEA=0x0
+ro.build.nothing.feature.diff.device.Spacewar=0x2a4041a032c34000
+

@@ -179,6 +179,10 @@ debug.stagefright.c2inputsurface=-1
 debug.stagefright.ccodec=4
 debug.stagefright.omx_default_rank=0
 
+# Nothing Features
+ro.vendor.nothing.feature.base=0x124a040124b4247b9fffL
+ro.vendor.nothing.feature.diff.device.Spacewar=0x2a4041a032c34000
+
 # QTEE
 persist.vendor.qteeconnector.retrying_interval=30
 persist.vendor.qteeconnector.retrying_timeout=2000
