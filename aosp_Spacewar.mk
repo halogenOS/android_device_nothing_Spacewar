@@ -23,9 +23,6 @@ $(call inherit-product, device/nothing/Spacewar/device.mk)
 # Inherit some common stuff.
 $(call inherit-product, $(CUSTOM_PRODUCT_DIR)/config/common_full_phone.mk)
 
-# Inherit my custom setup for unofficial
-$(call inherit-product, vendor/extras/config.mk)
-
 TARGET_GAPPS_ARCH := arm64
 TARGET_BOOT_ANIMATION_RES := 1080
 
