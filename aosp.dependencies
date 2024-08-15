@@ -2,7 +2,7 @@
   {
     "repository": "android_kernel_nothing_sm7325",
     "target_path": "kernel/nothing/sm7325",
-    "branch": "XOS-14.0.1"
+    "branch": "XOS-14.0.2"
   },
   {
     "repository": "android_packages_apps_ParanoidGlyph",
@@ -12,6 +12,6 @@
   {
     "repository": "android_vendor_nothing_Spacewar",
     "target_path": "vendor/nothing/Spacewar",
-    "branch": "XOS-14.0.1"
+    "branch": "XOS-14.0.2"
   }
 ]
