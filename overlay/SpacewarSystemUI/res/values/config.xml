@@ -3,16 +3,10 @@
     <!-- Doze: does this device support STATE_DOZE?  -->
     <bool name="doze_display_state_supported">true</bool>
 
-    <!-- The radius of the enrollment progress bar, in dp -->
-    <integer name="config_udfpsEnrollProgressBar" translatable="false">99</integer>
-
     <bool name="config_statusBarBurnInProtection">true</bool>
-
-    <color name="config_udfpsColor">#18cbff</color>
 
     <!-- Set audio panel to the left side -->
     <bool name="config_audioPanelOnLeftSide">true</bool>
-    <integer name="volume_dialog_gravity">19</integer>
 
-    <item name="pixel_pitch" format="float" type="dimen">60.6</item>
+    <item name="pixel_pitch" format="float" type="dimen">61.2</item>
 </resources>
