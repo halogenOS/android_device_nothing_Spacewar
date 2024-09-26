@@ -34,7 +34,7 @@ namespace fingerprint {
 namespace {
 constexpr int SENSOR_ID = 0;
 constexpr common::SensorStrength SENSOR_STRENGTH = common::SensorStrength::STRONG;
-constexpr int MAX_ENROLLMENTS_PER_USER = 7;
+constexpr int MAX_ENROLLMENTS_PER_USER = 5;
 constexpr bool SUPPORTS_NAVIGATION_GESTURES = false;
 constexpr char HW_COMPONENT_ID[] = "fingerprintSensor";
 constexpr char HW_VERSION[] = "vendor/model/revision";
