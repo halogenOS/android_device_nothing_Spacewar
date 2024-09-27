@@ -98,7 +98,8 @@ Fingerprint::Fingerprint()
                 continue;
             }
 
-            mDevice->goodixExtCmd(mDevice, readBool(fd) ? 1 : 0, 0);
+            bool b = readBool(fd);
+            ALOGD("Received bool %d", b);
         }
     }).detach();
 

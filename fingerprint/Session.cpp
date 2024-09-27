@@ -141,6 +141,8 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
                                           float major) {
     ALOGI("onPointerDown");
 
+    mDevice->goodixExtCmd(mDevice, 1, 0);
+
     checkSensorLockout();
 
     return ndk::ScopedAStatus::ok();
@@ -149,12 +151,13 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
 ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
     ALOGI("onPointerUp");
 
+    mDevice->goodixExtCmd(mDevice, 0, 0);
+
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus Session::onUiReady() {
     ALOGI("onUiReady");
-
     return ndk::ScopedAStatus::ok();
 }
 
@@ -199,6 +202,8 @@ ndk::ScopedAStatus Session::setIgnoreDisplayTouches(bool /*shouldIgnore*/) {
 ndk::ScopedAStatus Session::cancel() {
     ALOGI("cancel");
 
+    mDevice->goodixExtCmd(mDevice, 0, 0);
+
     int ret = mDevice->cancel(mDevice);
 
     if (ret == 0) {
@@ -229,8 +234,6 @@ bool Session::isClosed() {
 // Translate from errors returned by traditional HAL (see fingerprint.h) to
 // AIDL-compliant Error
 Error Session::VendorErrorFilter(int32_t error, int32_t* vendorCode) {
-    *vendorCode = 0;
-
     switch (error) {
         case FINGERPRINT_ERROR_HW_UNAVAILABLE:
             return Error::HW_UNAVAILABLE;
@@ -262,8 +265,6 @@ Error Session::VendorErrorFilter(int32_t error, int32_t* vendorCode) {
 // Translate acquired messages returned by traditional HAL (see fingerprint.h)
 // to AIDL-compliant AcquiredInfo
 AcquiredInfo Session::VendorAcquiredFilter(int32_t info, int32_t* vendorCode) {
-    *vendorCode = 0;
-
     switch (info) {
         case FINGERPRINT_ACQUIRED_GOOD:
             return AcquiredInfo::GOOD;
@@ -281,6 +282,7 @@ AcquiredInfo Session::VendorAcquiredFilter(int32_t info, int32_t* vendorCode) {
             if (info >= FINGERPRINT_ACQUIRED_VENDOR_BASE) {
                 // vendor specific code.
                 *vendorCode = info - FINGERPRINT_ACQUIRED_VENDOR_BASE;
+                ALOGD("Vendor specific code, vendorCode: %d, info: %d", *vendorCode, info);
                 return AcquiredInfo::VENDOR;
             }
     }
@@ -368,6 +370,8 @@ void Session::notify(const fingerprint_msg_t* msg) {
 
                 mCb->onAuthenticationSucceeded(msg->data.authenticated.finger.fid, authToken);
                 mLockoutTracker.reset(true);
+
+                mDevice->goodixExtCmd(mDevice, 0, 0);
             } else {
                 mCb->onAuthenticationFailed();
                 mLockoutTracker.addFailedAttempt();
