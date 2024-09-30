@@ -24,6 +24,8 @@ cc_binary {
         "android.hardware.biometrics.common.util",
     ],
     static_libs: ["libandroid.hardware.biometrics.fingerprint.NothingProps"],
+    lto: { thin: true },
+    whole_program_vtables: true,
 }
 
 sysprop_library {
@@ -42,4 +44,6 @@ cc_library_static {
     header_libs: [
         "generated_kernel_headers",
     ],
+    lto: { thin: true },
+    whole_program_vtables: true,
 }
