@@ -2,5 +2,6 @@ service vendor.fingerprint-nothing /vendor/bin/hw/android.hardware.biometrics.fi
     class late_start
     user system
     group system input uhid
+    interface aidl android.hardware.biometrics.fingerprint.IFingerprint/default
     shutdown critical
     task_profiles ProcessCapacityHigh MaxPerformance

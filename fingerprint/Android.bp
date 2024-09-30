@@ -13,17 +13,20 @@ cc_binary {
         "service.cpp",
     ],
     shared_libs: [
-        "libbase",
         "libbinder_ndk",
         "libcutils",
         "libhardware",
         "libdl",
         "liblog",
-        "android.hardware.biometrics.fingerprint-V4-ndk",
+    ],
+    static_libs: [
+        "libbase",
+        "libandroid.hardware.biometrics.fingerprint.NothingProps",
+        "android.hardware.biometrics.fingerprint-V5-ndk",
         "android.hardware.biometrics.common-V4-ndk",
         "android.hardware.biometrics.common.util",
+        "android.hardware.keymaster-V4-ndk",
     ],
-    static_libs: ["libandroid.hardware.biometrics.fingerprint.NothingProps"],
     lto: { thin: true },
     whole_program_vtables: true,
 }
