@@ -14,7 +14,6 @@ cc_binary {
     ],
     shared_libs: [
         "libbinder_ndk",
-        "libcutils",
         "libhardware",
         "libdl",
         "liblog",
@@ -24,7 +23,9 @@ cc_binary {
         "libandroid.hardware.biometrics.fingerprint.NothingProps",
         "android.hardware.biometrics.fingerprint-V5-ndk",
         "android.hardware.biometrics.common-V4-ndk",
+        "android.hardware.biometrics.common.thread",
         "android.hardware.biometrics.common.util",
+        "android.hardware.biometrics.common.config",
         "android.hardware.keymaster-V4-ndk",
     ],
     lto: { thin: true },

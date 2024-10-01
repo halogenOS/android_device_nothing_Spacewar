@@ -1,14 +1,20 @@
 /*
+ * Copyright (C) 2020 The Android Open Source Project
  * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2024 The halogenOS Project
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
 #include "Fingerprint.h"
+#include "Session.h"
 
 #include <android-base/logging.h>
 #include <android-base/parseint.h>
 #include <android-base/strings.h>
+#include <android-base/file.h>
+#include <android-base/logging.h>
+#include <android-base/stringprintf.h>
 
 #include <fingerprint.sysprop.h>
 
@@ -16,92 +22,45 @@
 #include <poll.h>
 #include <unistd.h>
 
-#include <thread>
-
-#define FOD_UI_PATH "/sys/devices/platform/soc/soc:qcom,dsi-display-primary/fod_ui"
-
 using namespace ::android::fingerprint::nothing;
 
 using ::android::base::ParseInt;
 using ::android::base::Split;
 
-namespace aidl {
-namespace android {
-namespace hardware {
-namespace biometrics {
-namespace fingerprint {
+#undef LOG_TAG
+#define LOG_TAG "NothingUdfpsHalSession"
+
+namespace aidl::android::hardware::biometrics::fingerprint {
 
 namespace {
+constexpr size_t MAX_WORKER_QUEUE_SIZE = 5;
 constexpr int SENSOR_ID = 0;
 constexpr common::SensorStrength SENSOR_STRENGTH = common::SensorStrength::STRONG;
 constexpr int MAX_ENROLLMENTS_PER_USER = 5;
 constexpr bool SUPPORTS_NAVIGATION_GESTURES = false;
 constexpr char HW_COMPONENT_ID[] = "fingerprintSensor";
-constexpr char HW_VERSION[] = "vendor/model/revision";
+constexpr char HW_VERSION[] = "nothing/goodix/fp_hal";
 constexpr char FW_VERSION[] = "1.01";
 constexpr char SERIAL_NUMBER[] = "00000001";
 constexpr char SW_COMPONENT_ID[] = "matchingAlgorithm";
-constexpr char SW_VERSION[] = "vendor/version/revision";
-
-static bool readBool(int fd) {
-    char c;
-    int rc;
-
-    rc = lseek(fd, 0, SEEK_SET);
-    if (rc) {
-        ALOGE("failed to seek fd, err: %d", rc);
-        return false;
-    }
-
-    rc = read(fd, &c, sizeof(char));
-    if (rc != 1) {
-        ALOGE("failed to read bool from fd, err: %d", rc);
-        return false;
-    }
-
-    return c != '0';
-}
+constexpr char SW_VERSION[] = "halogenOS/15/0";
 }  // namespace
 
 static Fingerprint* sInstance;
 
 Fingerprint::Fingerprint()
-    : mDevice(nullptr),
+    : mSensorType(FingerprintSensorType::UNKNOWN),
       mMaxEnrollmentsPerUser(MAX_ENROLLMENTS_PER_USER),
       mSupportsGestures(SUPPORTS_NAVIGATION_GESTURES),
-      mSensorType(FingerprintSensorType::UNKNOWN) {
+      mDevice(nullptr),
+      mWorker(MAX_WORKER_QUEUE_SIZE)  {
 
     sInstance = this; // keep track of the most recent instance
 
     mDevice = openHal();
     if (!mDevice) {
-        ALOGE("Can't open HAL module");
+        LOG(ERROR) << "Can't open HAL module";
     }
-
-    std::thread([this]() {
-        int fd = open(FOD_UI_PATH, O_RDONLY);
-        if (fd < 0) {
-            ALOGE("failed to open fd, err: %d", fd);
-            return;
-        }
-
-        struct pollfd fodUiPoll = {
-                .fd = fd,
-                .events = POLLERR | POLLPRI,
-                .revents = 0,
-        };
-
-        while (true) {
-            int rc = poll(&fodUiPoll, 1, -1);
-            if (rc < 0) {
-                ALOGE("failed to poll fd, err: %d", rc);
-                continue;
-            }
-
-            bool b = readBool(fd);
-            ALOGD("Received bool %d", b);
-        }
-    }).detach();
 
     std::string sensorTypeProp = FingerprintHalProperties::type().value_or("");
     if (sensorTypeProp == "" || sensorTypeProp == "default" || sensorTypeProp == "rear")
@@ -121,32 +80,32 @@ Fingerprint::Fingerprint()
 fingerprint_device_t* Fingerprint::openHal() {
     const hw_module_t* hw_mdl = nullptr;
 
-    ALOGD("Opening fingerprint hal library...");
+    LOG(DEBUG) << "Opening fingerprint hal library...";
     if (hw_get_module_by_class(FINGERPRINT_HARDWARE_MODULE_ID, NULL, &hw_mdl) != 0) {
-        ALOGE("Can't open fingerprint HW Module");
+        LOG(ERROR) << "Can't open fingerprint HW Module";
         return nullptr;
     }
 
     if (!hw_mdl) {
-        ALOGE("No valid fingerprint module");
+        LOG(ERROR) << "No valid fingerprint module";
         return nullptr;
     }
 
     auto module = reinterpret_cast<const fingerprint_module_t*>(hw_mdl);
     if (!module->common.methods->open) {
-        ALOGE("No valid open method");
+        LOG(ERROR) << "No valid open method";
         return nullptr;
     }
 
     hw_device_t* device = nullptr;
     if (module->common.methods->open(hw_mdl, nullptr, &device) != 0) {
-        ALOGE("Can't open fingerprint methods");
+        LOG(ERROR) << "Can't open fingerprint methods";
         return nullptr;
     }
 
     auto fp_device = reinterpret_cast<fingerprint_device_t*>(device);
     if (fp_device->set_notify(fp_device, Fingerprint::notify) != 0) {
-        ALOGE("Can't register fingerprint module callback");
+        LOG(ERROR) << "Can't register fingerprint module callback";
         return nullptr;
     }
 
@@ -155,15 +114,15 @@ fingerprint_device_t* Fingerprint::openHal() {
 
 Fingerprint::~Fingerprint() {
     int err;
-    ALOGV("~Fingerprint()");
+    LOG(VERBOSE) << "~Fingerprint()";
 
     if (mDevice == nullptr) {
-        ALOGE("No valid device");
+        LOG(ERROR) << "No valid device";
         return;
     }
 
     if (0 != (err = mDevice->common.close(reinterpret_cast<hw_device_t*>(mDevice)))) {
-        ALOGE("Can't close fingerprint module, error: %d", err);
+        LOG(ERROR) << "Can't close fingerprint module, error: " << err;
         return;
     }
 
@@ -174,7 +133,7 @@ void Fingerprint::notify(const fingerprint_msg_t* msg) {
     Fingerprint* thisPtr = sInstance;
 
     if (thisPtr == nullptr || thisPtr->mSession == nullptr || thisPtr->mSession->isClosed()) {
-        ALOGE("Receiving callbacks before a session is opened.");
+        LOG(ERROR) << "Receiving callbacks before a session is opened.";
         return;
     }
 
@@ -223,7 +182,9 @@ ndk::ScopedAStatus Fingerprint::createSession(int32_t /*sensorId*/, int32_t user
                                               std::shared_ptr<ISession>* out) {
     CHECK(mSession == nullptr || mSession->isClosed()) << "Open session already exists!";
 
-    mSession = SharedRefBase::make<Session>(mDevice, userId, cb, mLockoutTracker);
+    LOG(INFO) << "Creating session for user ID " << userId;
+
+    mSession = SharedRefBase::make<Session>(mDevice, userId, cb, mLockoutTracker, &mWorker);
     *out = mSession;
 
     mSession->linkToDeath(cb->asBinder().get());
@@ -231,8 +192,4 @@ ndk::ScopedAStatus Fingerprint::createSession(int32_t /*sensorId*/, int32_t user
     return ndk::ScopedAStatus::ok();
 }
 
-} // namespace fingerprint
-} // namespace biometrics
-} // namespace hardware
-} // namespace android
-} // namespace aidl
+} // namespace aidl::android::hardware::biometrics::fingerprint
