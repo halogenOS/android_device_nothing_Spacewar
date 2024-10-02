@@ -9,4 +9,6 @@
     <bool name="config_audioPanelOnLeftSide">true</bool>
 
     <item name="pixel_pitch" format="float" type="dimen">61.2</item>
+
+    <color name="config_udfpsColor">#18cbff</color>
 </resources>
