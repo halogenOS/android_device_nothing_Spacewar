@@ -344,6 +344,10 @@ ndk::ScopedAStatus Session::cancel() {
 // Translate from errors returned by traditional HAL (see fingerprint.h) to
 // AIDL-compliant Error
 Error Session::VendorErrorFilter(int32_t error, int32_t* vendorCode) {
+    if (vendorCode == NULL) {
+        int fakeVendorCode = 0;
+        vendorCode = &fakeVendorCode;
+    }
     switch (error) {
         case FINGERPRINT_ERROR_HW_UNAVAILABLE:
             return Error::HW_UNAVAILABLE;
@@ -375,6 +379,10 @@ Error Session::VendorErrorFilter(int32_t error, int32_t* vendorCode) {
 // Translate acquired messages returned by traditional HAL (see fingerprint.h)
 // to AIDL-compliant AcquiredInfo
 AcquiredInfo Session::VendorAcquiredFilter(int32_t info, int32_t* vendorCode) {
+    if (vendorCode == NULL) {
+        int fakeVendorCode = 0;
+        vendorCode = &fakeVendorCode;
+    }
     switch (info) {
         case FINGERPRINT_ACQUIRED_GOOD:
             return AcquiredInfo::GOOD;
