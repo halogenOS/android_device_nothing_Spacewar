@@ -72,7 +72,8 @@ typedef enum fingerprint_acquired_info {
     FINGERPRINT_ACQUIRED_IMAGER_DIRTY = 3, /* sensor needs to be cleaned */
     FINGERPRINT_ACQUIRED_TOO_SLOW = 4, /* mostly swipe-type sensors; not enough data collected */
     FINGERPRINT_ACQUIRED_TOO_FAST = 5, /* for swipe and area sensors; tell user to slow down*/
-    FINGERPRINT_ACQUIRED_DETECTED = 6, /* when the finger is first detected. Used to optimize
+    FINGERPRINT_ACQUIRED_VENDOR = 6,
+    FINGERPRINT_ACQUIRED_DETECTED = 7, /* when the finger is first detected. Used to optimize
                                           wakeup. Should be followed by one of the above messages */
     FINGERPRINT_ACQUIRED_VENDOR_BASE = 1000 /* vendor-specific acquisition messages start here */
 } fingerprint_acquired_info_t;

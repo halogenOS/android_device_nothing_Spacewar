@@ -1,21 +1,39 @@
 /*
- * Copyright (C) 2024 The LineageOS Project
- * Copyright (C) 2024 The halogenOS Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
- * SPDX-License-Identifier: Apache-2.0
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 #pragma once
+
 #include <aidl/android/hardware/biometrics/common/BnCancellationSignal.h>
-#include "Session.h"
+#include <functional>
+#include <future>
 
-using ::aidl::android::hardware::biometrics::common::BnCancellationSignal;
+namespace aidl::android::hardware::biometrics {
 
-namespace aidl::android::hardware::biometrics::fingerprint {
-class CancellationSignal : public BnCancellationSignal {
-public:
-    CancellationSignal(Session* session);
+class CancellationSignal : public common::BnCancellationSignal {
+  public:
+    explicit CancellationSignal(std::promise<void>&& cancellationPromise);
+
     ndk::ScopedAStatus cancel() override;
-private:
-    Session* mSession;
+
+  private:
+    std::promise<void> mCancellationPromise;
 };
-} // namespace aidl::android::hardware::biometrics::fingerprint
+
+// Returns whether the given cancellation future is ready, i.e. whether the operation corresponding
+// to this future should be cancelled.
+bool shouldCancel(const std::future<void>& cancellationFuture);
+
+}  // namespace aidl::android::hardware::biometrics

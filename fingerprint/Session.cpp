@@ -11,7 +11,7 @@
 #include "Session.h"
 #include "Legacy2Aidl.h"
 
-#include "util/CancellationSignal.h"
+#include "CancellationSignal.h"
 
 #undef LOG_TAG
 #define LOG_TAG "NothingUdfpsHalSession"
@@ -107,6 +107,7 @@ ndk::ScopedAStatus Session::enroll(const keymaster::HardwareAuthToken& hat,
     mWorker->schedule(Callable::from([this, hat, cancFuture = std::move(cancFuture)] {
         enterStateOrCrash(SessionState::ENROLLING);
         if (shouldCancel(cancFuture)) {
+            cancel();
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
         } else {
             hw_auth_token_t authToken;
@@ -135,11 +136,12 @@ ndk::ScopedAStatus Session::authenticate(int64_t operationId,
     mWorker->schedule(Callable::from([this, operationId, cancFuture = std::move(cancFuture)] {
         enterStateOrCrash(SessionState::AUTHENTICATING);
         if (shouldCancel(cancFuture)) {
+            cancel();
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
         } else {
             int error = mDevice->authenticate(mDevice, operationId, mUserId);
             if (error) {
-               LOG(ERROR) << "authenticate failed: " << error;
+                LOG(ERROR) << "authenticate failed: " << error;
                 mCb->onError(Error::UNABLE_TO_PROCESS, error);
             }
         }
@@ -160,6 +162,7 @@ ndk::ScopedAStatus Session::detectInteraction(std::shared_ptr<ICancellationSigna
     mWorker->schedule(Callable::from([this, cancFuture = std::move(cancFuture)] {
         enterStateOrCrash(SessionState::DETECTING_INTERACTION);
         if (shouldCancel(cancFuture)) {
+            cancel();
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
         } else {
             LOG(DEBUG) << "Detect interaction is not supported";
@@ -385,6 +388,8 @@ AcquiredInfo Session::VendorAcquiredFilter(int32_t info, int32_t* vendorCode) {
             return AcquiredInfo::TOO_SLOW;
         case FINGERPRINT_ACQUIRED_TOO_FAST:
             return AcquiredInfo::TOO_FAST;
+        case FINGERPRINT_ACQUIRED_VENDOR:
+            return VendorAcquiredFilter(*vendorCode, 0);
         default:
             if (info >= FINGERPRINT_ACQUIRED_VENDOR_BASE) {
                 // vendor specific code.
@@ -453,6 +458,9 @@ void Session::notify(const fingerprint_msg_t* msg) {
             int32_t vendorCode = 0;
             AcquiredInfo result =
                     VendorAcquiredFilter(msg->data.acquired.acquired_info, &vendorCode);
+            if (result == AcquiredInfo::GOOD) {
+                mLockoutTracker.reset(true);
+            }
             LOG(DEBUG) << "onAcquired(" << (int8_t) result << ", " << vendorCode << ");";
             enterIdling();
             mCb->onAcquired(result, vendorCode);
