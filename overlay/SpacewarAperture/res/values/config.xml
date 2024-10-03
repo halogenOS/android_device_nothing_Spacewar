@@ -2,5 +2,4 @@
 <resources>
     <!-- Enable auxiliary cameras selector. -->
     <bool name="config_enableAuxCameras">true</bool>
-
 </resources>

@@ -20,6 +20,7 @@ DEVICE_PACKAGE_OVERLAYS += \
 
 # RRO (Spacewar)
 PRODUCT_PACKAGES += \
+    SpacewarAperture \
     SpacewarCarrierConfig \
     SpacewarFrameworks \
     SpacewarNfc \

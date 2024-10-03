@@ -1,0 +1,11 @@
+//
+// Copyright (C) 2023 PixysOS
+// Copyright (C) 2024 The halogenOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+runtime_resource_overlay {
+    name: "SpacewarAperture",
+    aaptflags: ["--keep-raw-values"],
+    product_specific: true,
+}
