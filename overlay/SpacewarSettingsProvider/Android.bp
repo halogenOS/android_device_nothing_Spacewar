@@ -1,9 +1,10 @@
 //
-// Copyright (C) 2023 PixysOS  
+// Copyright (C) 2023 PixysOS
+// Copyright (C) 2024 The halogenOS Project
 // SPDX-License-Identifier: Apache-2.0
 //
 
 runtime_resource_overlay {
     name: "SpacewarSettingsProvider",
-    product_specific: true,
+    vendor: true,
 }
