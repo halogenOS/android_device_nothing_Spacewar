@@ -1,27 +1,28 @@
 /*
- * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2024 The halogenOS Project
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "CancellationSignal.h"
+#include "util/CancellationSignal.h"
 
-namespace aidl {
-namespace android {
-namespace hardware {
-namespace biometrics {
-namespace fingerprint {
+#include <android-base/logging.h>
+#include <chrono>
 
-CancellationSignal::CancellationSignal(Session* session)
-    : mSession(session) {
-}
+namespace aidl::android::hardware::biometrics {
+
+CancellationSignal::CancellationSignal(std::promise<void>&& cancellationPromise)
+    : mCancellationPromise(std::move(cancellationPromise)) {}
 
 ndk::ScopedAStatus CancellationSignal::cancel() {
-    return mSession->cancel();
+    mCancellationPromise.set_value();
+    return ndk::ScopedAStatus::ok();
 }
 
-} // namespace fingerprint
-} // namespace biometrics
-} // namespace hardware
-} // namespace android
-} // namespace aidl
+bool shouldCancel(const std::future<void>& f) {
+    CHECK(f.valid());
+    return f.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+}
+
+}  // namespace aidl::android::hardware::biometrics

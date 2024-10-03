@@ -1,8 +1,9 @@
- /*
-  * Copyright (C) 2014 The Android Open Source Project
-  *
+/*
+ * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2024 The halogenOS Project
+ *
  * SPDX-License-Identifier: Apache-2.0
-  */
+ */
 
 #pragma once
 
