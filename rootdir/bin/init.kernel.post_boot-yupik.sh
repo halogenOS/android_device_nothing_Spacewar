@@ -31,18 +31,9 @@
 #=============================================================================
 
 function configure_read_ahead_kb_values() {
-	MemTotalStr=`cat /proc/meminfo | grep MemTotal`
-	MemTotal=${MemTotalStr:16:8}
-
 	dmpts=$(ls /sys/block/*/queue/read_ahead_kb | grep -e dm -e mmc)
 
-	# Set 128 for <= 3GB &
-	# set 512 for >= 4GB targets.
-	if [ $MemTotal -le 3145728 ]; then
-		ra_kb=128
-	else
-		ra_kb=512
-	fi
+	ra_kb=512
 	if [ -f /sys/block/mmcblk0/bdi/read_ahead_kb ]; then
 		echo $ra_kb > /sys/block/mmcblk0/bdi/read_ahead_kb
 	fi
@@ -55,35 +46,16 @@ function configure_read_ahead_kb_values() {
 }
 
 function configure_memory_parameters() {
-	# Set Memory parameters.
-	#
-	# Set per_process_reclaim tuning parameters
-	# All targets will use vmpressure range 50-70,
-	# All targets will use 512 pages swap size.
-	#
-	# Set Low memory killer minfree parameters
-	# 32 bit Non-Go, all memory configurations will use 15K series
-	# 32 bit Go, all memory configurations will use uLMK + Memcg
-	# 64 bit will use Google default LMK series.
-	#
-	# Set ALMK parameters (usually above the highest minfree values)
-	# vmpressure_file_min threshold is always set slightly higher
-	# than LMK minfree's last bin value for all targets. It is calculated as
-	# vmpressure_file_min = (last bin - second last bin ) + last bin
-	#
-	# Set allocstall_threshold to 0 for all targets.
-	#
-
 	ProductName=`getprop ro.product.name`
 
 	configure_read_ahead_kb_values
 	echo 100 > /proc/sys/vm/swappiness
 
-        # Disable wsf  beacause we are using efk.
-        # wsf Range : 1..1000. So set to bare minimum value 1.
-        echo 1 > /proc/sys/vm/watermark_scale_factor
+	# Disable wsf  beacause we are using efk.
+	# wsf Range : 1..1000. So set to bare minimum value 1.
+	echo 1 > /proc/sys/vm/watermark_scale_factor
 
-	#Spawn 2 kswapd threads which can help in fast reclaiming of pages
+	# Spawn 2 kswapd threads which can help in fast reclaiming of pages
 	echo 2 > /proc/sys/vm/kswapd_threads
 }
 
@@ -127,7 +99,6 @@ echo 65 85 > /proc/sys/kernel/sched_downmigrate
 echo 100 > /proc/sys/kernel/sched_group_upmigrate
 echo 85 > /proc/sys/kernel/sched_group_downmigrate
 echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
-
 
 echo 0 > /proc/sys/kernel/sched_coloc_busy_hysteresis_enable_cpus
 
@@ -209,7 +180,6 @@ do
 	echo 25000 > $c7_rimps_l3/l2wb_filter
 done
 
-
 # configure bus-dcvs
 for device in /sys/devices/platform/soc
 do
@@ -284,7 +254,7 @@ do
 		echo 8 > $latfloor/polling_interval
 	done
 
-        # configure mem_latency settings for prime latfloor
+	# configure mem_latency settings for prime latfloor
 	for latfloor in $device/*cpu7-cpu*latfloor/devfreq/*cpu7-cpu*latfloor
 	do
 		cat $latfloor/available_frequencies | cut -d " " -f 1 > $latfloor/min_freq
@@ -299,7 +269,7 @@ do
 	done
 done
 
-#Enable sleep and set s2idle as default suspend mode
+# Enable sleep and set s2idle as default suspend mode
 echo N > /sys/module/lpm_levels/parameters/sleep_disabled
 echo s2idle > /sys/power/mem_sleep
 

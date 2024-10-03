@@ -24,9 +24,6 @@ debug.sf.enable_hwc_vds=1
 persist.sys.sf.native_mode=260
 persist.sys.sf.color_mode=0
 
-# Fingerprint
-ro.bootloader.locked=0
-
 # HWUI
 debug.hwui.skia_atrace_enabled=false
 

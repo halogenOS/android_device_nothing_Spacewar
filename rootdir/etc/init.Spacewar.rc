@@ -35,7 +35,6 @@ on fs
     chown nfc nfc /dev/nxp-nci
 
 on boot
-
     # Display
     chown system system /sys/class/drm/sde-conn-1-DSI-1/panel_id
     chmod 0666 /sys/class/drm/sde-conn-1-DSI-1/panel_id
@@ -110,14 +109,14 @@ on post-fs-data
     chmod 0444 /data/vendor/camera/ois_caldata_wide_persist.bin
     chown cameraserver audio /data/vendor/camera/ois_caldata_wide_persist.bin
 
-    # Nfc  
+    # Nfc
     mkdir /data/vendor 0777 nfc nfc
     mkdir /data/vendor/nfc 0777 nfc nfc
     mkdir /data/vendor/nfc/param 0777 nfc nfc
     chmod 0660 /dev/pn553
     chown nfc nfc /dev/pn553
 
-    # Wireless Charging
+# Wireless Charging
 on property:service.bootanim.exit=1
     chown system system /sys/class/qcom-battery/wireless_boost_en
     chmod 0666 /sys/class/qcom-battery/wireless_boost_en

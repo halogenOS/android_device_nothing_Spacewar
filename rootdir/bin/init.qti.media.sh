@@ -1,4 +1,4 @@
-#! /vendor/bin/sh
+#!/vendor/bin/sh
 #==============================================================================
 #       init.qti.media.sh
 #
@@ -77,39 +77,5 @@ case "$target" in
                 setprop vendor.netflix.bsp_rev "Q875-32408-1"
                 ;;
         esac
-        ;;
-    "holi")
-        case "$soc_hwid" in
-            507)
-                setprop vendor.media.target_variant "_blair"
-                setprop vendor.netflix.bsp_rev "Q4350-32962-1"
-                ;;
-            454|472)
-                setprop vendor.media.target_variant "_holi"
-                setprop vendor.netflix.bsp_rev "Q4350-32962-1"
-                ;;
-        esac
-        ;;
-    "msmnile")
-        setprop vendor.media.target_variant "_msmnile"
-        if [ $product == "msmnile_gvmq" ]; then
-            case "$soc_hwid" in
-                460)
-                    setprop vendor.media.target_variant "_direwolf"
-                    ;;
-                377)
-                    setprop vendor.media.target_variant "_sm6150"
-                    ;;
-                362|405)
-                    setprop vendor.media.target_variant "_msmnile"
-                    ;;
-            esac
-        fi
-        ;;
-    "sm6150")
-        setprop vendor.media.target_variant "_sm6150"
-        ;;
-    "direwolf")
-        setprop vendor.media.target_variant "_direwolf"
         ;;
 esac
