@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2024 The LineageOS Project
+ * Copyright (C) 2024 The halogenOS Project
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -9,11 +10,7 @@
 
 #include <util/Util.h>
 
-namespace aidl {
-namespace android {
-namespace hardware {
-namespace biometrics {
-namespace fingerprint {
+namespace aidl::android::hardware::biometrics::fingerprint {
 
 void LockoutTracker::reset(bool clearAttemptCounter) {
     if (clearAttemptCounter)
@@ -56,8 +53,4 @@ int64_t LockoutTracker::getLockoutTimeLeft() {
     return res;
 }
 
-} // namespace fingerprint
-} // namespace biometrics
-} // namespace hardware
-} // namespace android
-} // namespace aidl
+} // namespace aidl::android::hardware::biometrics::fingerprint
