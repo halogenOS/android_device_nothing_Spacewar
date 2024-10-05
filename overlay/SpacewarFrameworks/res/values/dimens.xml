@@ -17,6 +17,6 @@
     <!-- Default radius of the software rounded corners. -->
     <dimen name="rounded_corner_radius">36dp</dimen>
 
-    <dimen name="config_viewMinFlingVelocity">140dp</dimen>
-    <dimen name="config_viewMaxFlingVelocity">19200dp</dimen>
+    <dimen name="config_viewMinFlingVelocity">50dp</dimen>
+    <dimen name="config_viewMaxFlingVelocity">7400dp</dimen>
 </resources>
