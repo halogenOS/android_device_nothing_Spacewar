@@ -1,0 +1,6 @@
+default_containers: "vendor"
+
+release_config {
+    name: "ap3a"
+    flag_value_files: "release_configs/ap3a.textproto"
+}
