@@ -15,6 +15,9 @@ $(call inherit-product, hardware/qcom-caf/common/common.mk)
 # Get non-open-source specific aspects
 $(call inherit-product, vendor/nothing/Spacewar/Spacewar-vendor.mk)
 
+PRODUCT_PACKAGES += \
+    NcmTetheringOverlay
+
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
 # Soong namespaces
