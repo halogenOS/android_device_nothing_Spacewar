@@ -2,7 +2,7 @@
   {
     "repository": "android_kernel_nothing_sm7325",
     "target_path": "kernel/nothing/sm7325",
-    "branch": "XOS-15.1"
+    "branch": "XOS-15.1.1"
   },
   {
     "repository": "android_packages_apps_ParanoidGlyph",
