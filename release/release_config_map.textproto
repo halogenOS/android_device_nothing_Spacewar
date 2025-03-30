@@ -1,6 +1,6 @@
 default_containers: "vendor"
 
 release_config {
-    name: "ap4a"
-    flag_value_files: "release_configs/ap4a.textproto"
+    name: "bp1a"
+    flag_value_files: "release_configs/bp1a.textproto"
 }
