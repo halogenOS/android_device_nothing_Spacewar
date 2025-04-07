@@ -123,6 +123,8 @@ PRODUCT_PACKAGES += \
     AntHalService-Soong
 
 # Audio
+$(call soong_config_set,supports_extended_compress_format,true)
+
 PRODUCT_PACKAGES += \
     android.hardware.audio@6.0-impl \
     android.hardware.audio.effect@6.0-impl \
