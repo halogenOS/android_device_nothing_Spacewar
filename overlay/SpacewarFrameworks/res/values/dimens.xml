@@ -15,7 +15,10 @@
     <dimen name="status_bar_height_portrait">@dimen/status_bar_height_default</dimen>
 
     <!-- Default radius of the software rounded corners. -->
-    <dimen name="rounded_corner_radius">36dp</dimen>
+    <dimen name="rounded_corner_radius">107px</dimen>
+
+     <!-- Default paddings for content around the corners. -->
+    <dimen name="rounded_corner_content_padding">63px</dimen>
 
     <dimen name="config_viewMinFlingVelocity">50dp</dimen>
     <dimen name="config_viewMaxFlingVelocity">7400dp</dimen>

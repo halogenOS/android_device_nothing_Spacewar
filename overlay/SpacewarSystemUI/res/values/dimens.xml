@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Allow CornerHandleView and PathSpecCornerPathRenderer to decouple from corner-radius -->
     <dimen name="config_rounded_mask_size">156px</dimen>
 
@@ -19,15 +18,13 @@
     <!-- Margin on the left side of the carrier text on Keyguard -->
     <dimen name="keyguard_carrier_text_margin">16dp</dimen>
 
-    <!-- Margin on the bottom of the indication text on Keyguard -->
-    <dimen name="keyguard_indication_margin_bottom">320px</dimen>
-
-    <!-- Location on the screen of the center of the physical power button. -->
-    <dimen name="physical_power_button_center_screen_location_y">989px</dimen>
+    <!-- Bottom margin size when fingerprint in display is active -->
+    <dimen name="keyguard_indication_margin_bottom">16dp</dimen>
 
     <!-- Location on the screen of the center of the physical volume up/down buttons. -->
     <dimen name="physical_volume_up_button_center_screen_location_y">840px</dimen>
     <dimen name="physical_volume_down_button_center_screen_location_y">990px</dimen>
+    <dimen name="physical_power_button_center_screen_location_y">965px</dimen>
 
     <!-- For burn-in protection -->
     <dimen name="status_bar_offset_max_y">2dp</dimen>

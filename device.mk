@@ -15,10 +15,6 @@ $(call inherit-product, hardware/qcom-caf/common/common.mk)
 # Get non-open-source specific aspects
 $(call inherit-product, vendor/nothing/Spacewar/Spacewar-vendor.mk)
 
-# Overlays
-DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay
-
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
 # Soong namespaces
@@ -366,7 +362,16 @@ PRODUCT_PACKAGES += \
     wpa_supplicant \
     wpa_supplicant.conf
 
+# RRO
 PRODUCT_PACKAGES += \
+    SpacewarAperture \
+    SpacewarCarrierConfig \
+    SpacewarFrameworks \
+    SpacewarNfc \
+    SpacewarSettingsProvider \
+    SpacewarSettings \
+    SpacewarSystemUI \
+    SpacewarTelephony \
     WifiResCommon
 
 PRODUCT_COPY_FILES += \
