@@ -12,6 +12,6 @@ cc_library {
         "libbase",
     ],
     header_libs: [
-        "//hardware/nothing:nothingfingerprint_headers",
+        "nothingfingerprint_headers",
     ],
 }
