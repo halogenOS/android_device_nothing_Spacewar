@@ -10,6 +10,11 @@
     "branch": "XOS-15.2"
   },
   {
+    "repository": "android_packages_apps_GlyphAdapter",
+    "target_path": "packages/apps/GlyphAdapter",
+    "branch": "XOS-15.2"
+  },
+  {
     "repository": "android_vendor_nothing_Spacewar",
     "target_path": "vendor/nothing/Spacewar",
     "branch": "XOS-15.2"
