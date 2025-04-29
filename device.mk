@@ -206,6 +206,8 @@ PRODUCT_PACKAGES += \
     android.hardware.biometrics.fingerprint-service.nothing \
     libudfpshandler
 
+$(call soong_config_set,surfaceflinger,udfps_lib,libudfps_extension.nothing)
+
 # Health
 PRODUCT_PACKAGES += \
     android.hardware.health-service.qti
