@@ -753,4 +753,8 @@
          Settings.System.RING_VIBRATION_INTENSITY more details on the constant values and
          meanings. -->
     <integer name="config_defaultRingVibrationIntensity">3</integer>
+    <!-- Number of physical SIM slots on the device. This includes both eSIM and pSIM slots.
+         e.g. a device with 1 eSIM and 1 pSIM slot would have 2 physical slots. -->
+    <integer name="config_num_physical_slots">2</integer>
+
 </resources>
