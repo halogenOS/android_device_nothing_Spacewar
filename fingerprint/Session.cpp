@@ -250,11 +250,6 @@ ndk::ScopedAStatus Session::close() {
 
 ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int32_t y, float minor,
                                           float major) {
-    mWorker->schedule(Callable::from([this, x, y, minor, major] {
-        mDevice->goodixExtCmd(mDevice, 1, 0);
-        checkSensorLockout();
-    }));
-
     return ndk::ScopedAStatus::ok();
 }
 
@@ -268,7 +263,8 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 
 ndk::ScopedAStatus Session::onUiReady() {
     mWorker->schedule(Callable::from([this] {
-        enterIdling();
+        mDevice->goodixExtCmd(mDevice, 1, 0);
+        checkSensorLockout();
     }));
     return ndk::ScopedAStatus::ok();
 }
