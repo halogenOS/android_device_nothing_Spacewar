@@ -98,6 +98,7 @@ private:
     bool mIsLockoutTimerAborted = false;
     // The user ID for which this session was created.
     int32_t mUserId;
+    std::atomic<bool> mUiReady{false};
     // Callback for talking to the framework. This callback must only be called from non-binder
     // threads to prevent nested binder calls and consequently a binder thread exhaustion.
     // Practically, it means that this callback should always be called from the worker thread.
