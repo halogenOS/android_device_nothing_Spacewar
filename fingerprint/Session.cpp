@@ -135,6 +135,7 @@ ndk::ScopedAStatus Session::authenticate(int64_t operationId,
             cancel();
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
         } else {
+            mUiReady = false;
             int error = mDevice->authenticate(mDevice, operationId, mUserId);
             if (error) {
                 LOG(ERROR) << "authenticate failed: " << error;
@@ -242,7 +243,10 @@ ndk::ScopedAStatus Session::resetLockout(const keymaster::HardwareAuthToken& /* 
 }
 
 ndk::ScopedAStatus Session::close() {
-    mWorker->schedule(Callable::from([this]{ mDevice->goodixExtCmd(mDevice, 0, 0); }));
+    mWorker->schedule(Callable::from([this] {
+        mDevice->goodixExtCmd(mDevice, 0, 0);
+        mUiReady = false;
+    }));
     mCurrentState = SessionState::CLOSED;
     mCb->onSessionClosed();
     AIBinder_DeathRecipient_delete(mDeathRecipient);
@@ -252,6 +256,9 @@ ndk::ScopedAStatus Session::close() {
 ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int32_t y, float minor,
                                           float major) {
     mWorker->schedule(Callable::from([this, x, y, minor, major] {
+        for (int i = 0; i < 200 && !mUiReady.load(); ++i) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        }
         mDevice->goodixExtCmd(mDevice, 1, 0);
         checkSensorLockout();
     }));
@@ -261,6 +268,7 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
 
 ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
     mWorker->schedule(Callable::from([this] {
+        mUiReady = false;
         mDevice->goodixExtCmd(mDevice, 0, 0);
     }));
 
@@ -269,7 +277,7 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 
 ndk::ScopedAStatus Session::onUiReady() {
     mWorker->schedule(Callable::from([this] {
-        mDevice->goodixExtCmd(mDevice, 1, 0);
+        mUiReady = true;
         enterIdling();
     }));
     return ndk::ScopedAStatus::ok();
@@ -316,6 +324,7 @@ ndk::ScopedAStatus Session::setIgnoreDisplayTouches(bool /*shouldIgnore*/) {
 ndk::ScopedAStatus Session::cancel() {
     mWorker->schedule(Callable::from([this] {
         mDevice->goodixExtCmd(mDevice, 0, 0);
+        mUiReady = false;
         int ret = mDevice->cancel(mDevice);
         if (ret == 0) {
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
@@ -444,6 +453,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
             LOG(DEBUG) << "onError(" << (int8_t) result << ", " << vendorCode << ");";
             enterIdling();
             mCb->onError(result, vendorCode);
+            mUiReady = false;
         } break;
         case FINGERPRINT_ACQUIRED: {
             int32_t vendorCode = 0;
@@ -488,6 +498,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
                 mLockoutTracker.addFailedAttempt();
                 checkSensorLockout();
             }
+            mUiReady = false;
         } break;
         case FINGERPRINT_TEMPLATE_ENUMERATING: {
             LOG(DEBUG) << "onEnumerate(fid=" << msg->data.enumerated.finger.fid
