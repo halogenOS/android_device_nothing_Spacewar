@@ -242,6 +242,7 @@ ndk::ScopedAStatus Session::resetLockout(const keymaster::HardwareAuthToken& /* 
 }
 
 ndk::ScopedAStatus Session::close() {
+    mWorker->schedule(Callable::from([this]{ mDevice->goodixExtCmd(mDevice, 0, 0); }));
     mCurrentState = SessionState::CLOSED;
     mCb->onSessionClosed();
     AIBinder_DeathRecipient_delete(mDeathRecipient);
@@ -268,6 +269,7 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 
 ndk::ScopedAStatus Session::onUiReady() {
     mWorker->schedule(Callable::from([this] {
+        mDevice->goodixExtCmd(mDevice, 1, 0);
         enterIdling();
     }));
     return ndk::ScopedAStatus::ok();
@@ -313,6 +315,7 @@ ndk::ScopedAStatus Session::setIgnoreDisplayTouches(bool /*shouldIgnore*/) {
 
 ndk::ScopedAStatus Session::cancel() {
     mWorker->schedule(Callable::from([this] {
+        mDevice->goodixExtCmd(mDevice, 0, 0);
         int ret = mDevice->cancel(mDevice);
         if (ret == 0) {
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
