@@ -246,6 +246,7 @@ ndk::ScopedAStatus Session::close() {
     mWorker->schedule(Callable::from([this] {
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;
+        mUiCv.notify_all();
     }));
     mCurrentState = SessionState::CLOSED;
     mCb->onSessionClosed();
@@ -256,8 +257,11 @@ ndk::ScopedAStatus Session::close() {
 ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int32_t y, float minor,
                                           float major) {
     mWorker->schedule(Callable::from([this, x, y, minor, major] {
-        for (int i = 0; i < 200 && !mUiReady.load(); ++i) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        // Wait for UI to be ready using condition variable with timeout
+        {
+            std::unique_lock<std::mutex> lk(mUiMutex);
+            (void)mUiCv.wait_for(lk, std::chrono::milliseconds(400),
+                                 [this]{ return mUiReady.load(); });
         }
         mDevice->goodixExtCmd(mDevice, 1, 0);
         checkSensorLockout();
@@ -269,6 +273,7 @@ ndk::ScopedAStatus Session::onPointerDown(int32_t /*pointerId*/, int32_t x, int3
 ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
     mWorker->schedule(Callable::from([this] {
         mUiReady = false;
+        mUiCv.notify_all();
         mDevice->goodixExtCmd(mDevice, 0, 0);
     }));
 
@@ -276,10 +281,13 @@ ndk::ScopedAStatus Session::onPointerUp(int32_t /*pointerId*/) {
 }
 
 ndk::ScopedAStatus Session::onUiReady() {
-    mWorker->schedule(Callable::from([this] {
+    // Directly set UI ready from binder thread without scheduling
+    {
+        std::lock_guard<std::mutex> lk(mUiMutex);
         mUiReady = true;
-        enterIdling();
-    }));
+    }
+    mUiCv.notify_all();
+    enterIdling();
     return ndk::ScopedAStatus::ok();
 }
 
@@ -325,6 +333,7 @@ ndk::ScopedAStatus Session::cancel() {
     mWorker->schedule(Callable::from([this] {
         mDevice->goodixExtCmd(mDevice, 0, 0);
         mUiReady = false;
+        mUiCv.notify_all();
         int ret = mDevice->cancel(mDevice);
         if (ret == 0) {
             mCb->onError(Error::CANCELED, 0 /* vendorCode */);
@@ -454,6 +463,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
             enterIdling();
             mCb->onError(result, vendorCode);
             mUiReady = false;
+            mUiCv.notify_all();
         } break;
         case FINGERPRINT_ACQUIRED: {
             int32_t vendorCode = 0;
@@ -499,6 +509,7 @@ void Session::notify(const fingerprint_msg_t* msg) {
                 checkSensorLockout();
             }
             mUiReady = false;
+            mUiCv.notify_all();
         } break;
         case FINGERPRINT_TEMPLATE_ENUMERATING: {
             LOG(DEBUG) << "onEnumerate(fid=" << msg->data.enumerated.finger.fid

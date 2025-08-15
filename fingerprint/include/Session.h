@@ -8,14 +8,18 @@
 #pragma once
 #include <aidl/android/hardware/biometrics/fingerprint/BnSession.h>
 #include <aidl/android/hardware/biometrics/fingerprint/ISessionCallback.h>
+#include <condition_variable>
+#include <mutex>
 #include "fingerprint.h"
 #include <hardware/hardware.h>
 #include "LockoutTracker.h"
 #include "thread/WorkerThread.h"
+
 using ::aidl::android::hardware::biometrics::common::ICancellationSignal;
 using ::aidl::android::hardware::biometrics::common::OperationContext;
 using ::aidl::android::hardware::biometrics::fingerprint::PointerContext;
 using ::aidl::android::hardware::keymaster::HardwareAuthToken;
+
 namespace aidl::android::hardware::biometrics::fingerprint {
 
 namespace common = aidl::android::hardware::biometrics::common;
@@ -99,6 +103,9 @@ private:
     // The user ID for which this session was created.
     int32_t mUserId;
     std::atomic<bool> mUiReady{false};
+    std::condition_variable mUiCv;
+    std::mutex mUiMutex;
+
     // Callback for talking to the framework. This callback must only be called from non-binder
     // threads to prevent nested binder calls and consequently a binder thread exhaustion.
     // Practically, it means that this callback should always be called from the worker thread.
