@@ -291,9 +291,6 @@ PRODUCT_PACKAGES += \
     com.android.nfc_extras \
     Tag
 
-# Nt-fwk
-$(call inherit-product, hardware/nothing/packages/nt-fwk/nt-fwk.mk)
-
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power-service.lineage-libperfmgr \
