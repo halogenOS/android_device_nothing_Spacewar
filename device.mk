@@ -26,6 +26,7 @@ PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/nothing \
+    packages/apps/ParanoidGlyph \
     vendor/qcom/opensource/usb/etc
 
 # A/B
