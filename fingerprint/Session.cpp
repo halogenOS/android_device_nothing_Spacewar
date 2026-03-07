@@ -74,7 +74,9 @@ ndk::ScopedAStatus Session::generateChallenge() {
     mWorker->schedule(Callable::from([this] {
         enterStateOrCrash(SessionState::GENERATING_CHALLENGE);
         uint64_t challenge = mDevice->pre_enroll(mDevice);
-        mCb->onChallengeGenerated(challenge);
+        if (!mCb->onChallengeGenerated(challenge).isOk()) {
+            LOG(ERROR) << "Failed to invoke onChallengeGenerated callback";
+        }
         enterIdling();
     }));
 
@@ -87,7 +89,9 @@ ndk::ScopedAStatus Session::revokeChallenge(int64_t challenge) {
     mWorker->schedule(Callable::from([this, challenge] {
         enterStateOrCrash(SessionState::REVOKING_CHALLENGE);
         mDevice->post_enroll(mDevice);
-        mCb->onChallengeRevoked(challenge);
+        if (!mCb->onChallengeRevoked(challenge).isOk()) {
+            LOG(ERROR) << "Failed to invoke onChallengeRevoked callback";
+        }
         enterIdling();
     }));
 
@@ -105,14 +109,18 @@ ndk::ScopedAStatus Session::enroll(const keymaster::HardwareAuthToken& hat,
         enterStateOrCrash(SessionState::ENROLLING);
         if (shouldCancel(cancFuture)) {
             cancel();
-            mCb->onError(Error::CANCELED, 0 /* vendorCode */);
+            if (!mCb->onError(Error::CANCELED, 0 /* vendorCode */).isOk()) {
+                LOG(ERROR) << "Failed to invoke onError callback";
+            }
         } else {
             hw_auth_token_t authToken;
             translate(hat, authToken);
             int error = mDevice->enroll(mDevice, &authToken, mUserId, 60);
             if (error) {
                 LOG(ERROR) << "enroll failed: " << error;
-                mCb->onError(Error::UNABLE_TO_PROCESS, error);
+                if (!mCb->onError(Error::UNABLE_TO_PROCESS, error).isOk()) {
+                    LOG(ERROR) << "Failed to invoke onError callback";
+                }
             }
         }
         enterIdling();
@@ -133,13 +141,17 @@ ndk::ScopedAStatus Session::authenticate(int64_t operationId,
         enterStateOrCrash(SessionState::AUTHENTICATING);
         if (shouldCancel(cancFuture)) {
             cancel();
-            mCb->onError(Error::CANCELED, 0 /* vendorCode */);
+            if (!mCb->onError(Error::CANCELED, 0 /* vendorCode */).isOk()) {
+                LOG(ERROR) << "Failed to invoke onError callback";
+            }
         } else {
             mUiReady = false;
             int error = mDevice->authenticate(mDevice, operationId, mUserId);
             if (error) {
                 LOG(ERROR) << "authenticate failed: " << error;
-                mCb->onError(Error::UNABLE_TO_PROCESS, error);
+                if (!mCb->onError(Error::UNABLE_TO_PROCESS, error).isOk()) {
+                    LOG(ERROR) << "Failed to invoke onError callback";
+                }
             }
         }
         enterIdling();
@@ -159,10 +171,14 @@ ndk::ScopedAStatus Session::detectInteraction(std::shared_ptr<ICancellationSigna
         enterStateOrCrash(SessionState::DETECTING_INTERACTION);
         if (shouldCancel(cancFuture)) {
             cancel();
-            mCb->onError(Error::CANCELED, 0 /* vendorCode */);
+            if (!mCb->onError(Error::CANCELED, 0 /* vendorCode */).isOk()) {
+                LOG(ERROR) << "Failed to invoke onError callback";
+            }
         } else {
             LOG(DEBUG) << "Detect interaction is not supported";
-            mCb->onError(Error::UNABLE_TO_PROCESS, 0 /* vendorCode */);
+            if (!mCb->onError(Error::UNABLE_TO_PROCESS, 0 /* vendorCode */).isOk()) {
+                LOG(ERROR) << "Failed to invoke onError callback";
+            }
         }
         enterIdling();
     }));
@@ -209,7 +225,9 @@ ndk::ScopedAStatus Session::getAuthenticatorId() {
     mWorker->schedule(Callable::from([this] {
         enterStateOrCrash(SessionState::GETTING_AUTHENTICATOR_ID);
         uint64_t auth_id = mDevice->get_authenticator_id(mDevice);
-        mCb->onAuthenticatorIdRetrieved(auth_id);
+        if (!mCb->onAuthenticatorIdRetrieved(auth_id).isOk()) {
+            LOG(ERROR) << "Failed to invoke onAuthenticatorIdRetrieved callback";
+        }
         enterIdling();
     }));
 
@@ -222,7 +240,9 @@ ndk::ScopedAStatus Session::invalidateAuthenticatorId() {
     mWorker->schedule(Callable::from([this] {
         enterStateOrCrash(SessionState::INVALIDATING_AUTHENTICATOR_ID);
         uint64_t auth_id = mDevice->get_authenticator_id(mDevice);
-        mCb->onAuthenticatorIdInvalidated(auth_id);
+        if (!mCb->onAuthenticatorIdInvalidated(auth_id).isOk()) {
+            LOG(ERROR) << "Failed to invoke onAuthenticatorIdInvalidated callback";
+        }
         enterIdling();
     }));
 
@@ -249,7 +269,9 @@ ndk::ScopedAStatus Session::close() {
         mUiCv.notify_all();
     }));
     mCurrentState = SessionState::CLOSED;
-    mCb->onSessionClosed();
+    if (!mCb->onSessionClosed().isOk()) {
+        LOG(ERROR) << "Failed to invoke onSessionClosed callback";
+    }
     AIBinder_DeathRecipient_delete(mDeathRecipient);
     return ndk::ScopedAStatus::ok();
 }
@@ -336,7 +358,9 @@ ndk::ScopedAStatus Session::cancel() {
         mUiCv.notify_all();
         int ret = mDevice->cancel(mDevice);
         if (ret == 0) {
-            mCb->onError(Error::CANCELED, 0 /* vendorCode */);
+            if (!mCb->onError(Error::CANCELED, 0 /* vendorCode */).isOk()) {
+                LOG(ERROR) << "Failed to invoke onError callback";
+            }
         }
         enterIdling();
     }));
@@ -416,13 +440,17 @@ bool Session::checkSensorLockout() {
     LockoutMode lockoutMode = mLockoutTracker.getMode();
     if (lockoutMode == LockoutMode::PERMANENT) {
         LOG(ERROR) << "Fail: lockout permanent";
-        mCb->onLockoutPermanent();
+        if (!mCb->onLockoutPermanent().isOk()) {
+            LOG(ERROR) << "Failed to invoke onLockoutPermanent callback";
+        }
         mIsLockoutTimerAborted = true;
         return true;
     } else if (lockoutMode == LockoutMode::TIMED) {
         int64_t timeLeft = mLockoutTracker.getLockoutTimeLeft();
         LOG(ERROR) << "Fail: lockout timed: " << timeLeft;
-        mCb->onLockoutTimed(timeLeft);
+        if (!mCb->onLockoutTimed(timeLeft).isOk()) {
+            LOG(ERROR) << "Failed to invoke onLockoutTimed callback";
+        }
         if (!mIsLockoutTimerStarted) startLockoutTimer(timeLeft);
         return true;
     }
@@ -431,7 +459,9 @@ bool Session::checkSensorLockout() {
 
 void Session::clearLockout(bool clearAttemptCounter) {
     mLockoutTracker.reset(clearAttemptCounter);
-    mCb->onLockoutCleared();
+    if (!mCb->onLockoutCleared().isOk()) {
+        LOG(ERROR) << "Failed to invoke onLockoutCleared callback";
+    }
 }
 
 void Session::startLockoutTimer(int64_t timeout) {
@@ -461,7 +491,9 @@ void Session::notify(const fingerprint_msg_t* msg) {
             Error result = VendorErrorFilter(msg->data.error, &vendorCode);
             LOG(DEBUG) << "onError(" << (int8_t) result << ", " << vendorCode << ");";
             enterIdling();
-            mCb->onError(result, vendorCode);
+            if (!mCb->onError(result, vendorCode).isOk()) {
+                LOG(ERROR) << "Failed to invoke onError callback";
+            }
             mUiReady = false;
             mUiCv.notify_all();
         } break;
@@ -474,15 +506,19 @@ void Session::notify(const fingerprint_msg_t* msg) {
             }
             enterIdling();
             if (result != AcquiredInfo::VENDOR) {
-                mCb->onAcquired(result, vendorCode);
+                if (!mCb->onAcquired(result, vendorCode).isOk()) {
+                    LOG(ERROR) << "Failed to invoke onAcquired callback";
+                }
             }
         } break;
         case FINGERPRINT_TEMPLATE_ENROLLING: {
             LOG(DEBUG) << "onEnrollResult(fid=" << msg->data.enroll.finger.fid
                        << ", gid=" << msg->data.enroll.finger.gid
                        << ", rem=" << msg->data.enroll.samples_remaining << ")";
-            mCb->onEnrollmentProgress(msg->data.enroll.finger.fid,
-                                      msg->data.enroll.samples_remaining);
+            if (!mCb->onEnrollmentProgress(msg->data.enroll.finger.fid,
+                                          msg->data.enroll.samples_remaining).isOk()) {
+                LOG(ERROR) << "Failed to invoke onEnrollmentProgress callback";
+            }
         } break;
         case FINGERPRINT_TEMPLATE_REMOVED: {
             LOG(DEBUG) << "onRemove(fid=" << msg->data.removed.finger.fid
@@ -490,7 +526,9 @@ void Session::notify(const fingerprint_msg_t* msg) {
                        << ", rem=" << msg->data.removed.remaining_templates << ")";
             std::vector<int> enrollments;
             enrollments.push_back(msg->data.removed.finger.fid);
-            mCb->onEnrollmentsRemoved(enrollments);
+            if (!mCb->onEnrollmentsRemoved(enrollments).isOk()) {
+                LOG(ERROR) << "Failed to invoke onEnrollmentsRemoved callback";
+            }
         } break;
         case FINGERPRINT_AUTHENTICATED: {
             LOG(DEBUG) << "onAuthenticated(fid=" << msg->data.authenticated.finger.fid
@@ -501,10 +539,14 @@ void Session::notify(const fingerprint_msg_t* msg) {
                 HardwareAuthToken authToken;
                 translate(hat, authToken);
 
-                mCb->onAuthenticationSucceeded(msg->data.authenticated.finger.fid, authToken);
+                if (!mCb->onAuthenticationSucceeded(msg->data.authenticated.finger.fid, authToken).isOk()) {
+                    LOG(ERROR) << "Failed to invoke onAuthenticationSucceeded callback";
+                }
                 mLockoutTracker.reset(true);
             } else {
-                mCb->onAuthenticationFailed();
+                if (!mCb->onAuthenticationFailed().isOk()) {
+                    LOG(ERROR) << "Failed to invoke onAuthenticationFailed callback";
+                }
                 mLockoutTracker.addFailedAttempt();
                 checkSensorLockout();
             }
@@ -518,7 +560,9 @@ void Session::notify(const fingerprint_msg_t* msg) {
             static std::vector<int> enrollments;
             enrollments.push_back(msg->data.enumerated.finger.fid);
             if (msg->data.enumerated.remaining_templates == 0) {
-                mCb->onEnrollmentsEnumerated(enrollments);
+                if (!mCb->onEnrollmentsEnumerated(enrollments).isOk()) {
+                    LOG(ERROR) << "Failed to invoke onEnrollmentsEnumerated callback";
+                }
                 enrollments.clear();
             }
         } break;
