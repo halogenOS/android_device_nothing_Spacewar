@@ -6,7 +6,6 @@
 
 soong_namespace {
     imports: [
-        "hardware/nothing",
         "hardware/google/interfaces",
         "hardware/google/pixel",
         "vendor/nothing/Spacewar",
