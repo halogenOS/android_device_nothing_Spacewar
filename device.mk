@@ -27,6 +27,7 @@ PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
     hardware/nothing \
     packages/apps/ParanoidGlyph \
+    packages/apps/GlyphAdapter \
     vendor/qcom/opensource/usb/etc
 
 # A/B
