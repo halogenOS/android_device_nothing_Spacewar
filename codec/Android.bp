@@ -1,0 +1,18 @@
+cc_binary {
+    name: "custom.media.codec.features-service.spacewar",
+    vintf_fragments: ["custom.media.codec.features-service.spacewar.xml"],
+    init_rc: ["custom.media.codec.features-service.spacewar.rc"],
+    relative_install_path: "hw",
+    vendor: true,
+    srcs: [
+        "CodecFeatures.cpp",
+        "service.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+        "liblog",
+        "libbinder_ndk",
+        "libutils",
+        "custom.media.codec-V1-ndk",
+    ],
+}
