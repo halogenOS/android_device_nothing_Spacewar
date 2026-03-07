@@ -1,0 +1,4 @@
+service custom.media.codec.features-spacewar /vendor/bin/hw/custom.media.codec.features-service.spacewar
+    class hal
+    user system
+    group system

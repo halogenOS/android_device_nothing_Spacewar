@@ -251,6 +251,10 @@ PRODUCT_PACKAGES += \
 
 $(call soong_config_set,lineage_health,charging_control_charging_path,/sys/class/qcom-battery/charging_enabled)
 
+# Codec features
+PRODUCT_PACKAGES += \
+    custom.media.codec.features-service.spacewar
+
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media/media_codecs_performance_yupik_v1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_performance_yupik_v1.xml \
@@ -259,9 +263,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media/media_profiles_vendor.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_vendor.xml \
     $(LOCAL_PATH)/configs/media/media_profiles_yupik_v1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_yupik_v1.xml \
     $(LOCAL_PATH)/configs/media/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles.xml
-
-
-$(call soong_config_set_bool,stagefright,target_disable_thumbnail_block_model,true)
 
 # Native libraries whitelist
 PRODUCT_COPY_FILES += \
