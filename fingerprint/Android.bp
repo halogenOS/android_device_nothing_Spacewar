@@ -57,16 +57,23 @@ cc_library_headers {
     export_header_lib_headers: ["libhardware_headers"],
 }
 
-cc_library_static {
-    name: "libudfps_extension.nothing",
-    srcs: ["UdfpsExtension.cpp"],
-    include_dirs: [
-        "frameworks/native/services/surfaceflinger/CompositionEngine/include"
+cc_binary {
+    name: "custom.hardware.biometrics.fingerprint.udfps-service.nothing",
+    vintf_fragments: ["custom.hardware.biometrics.fingerprint.udfps-service.nothing.xml"],
+    init_rc: ["custom.hardware.biometrics.fingerprint.udfps-service.nothing.rc"],
+    relative_install_path: "hw",
+    vendor: true,
+    srcs: [
+        "UdfpsExtension.cpp",
+        "udfps_service.cpp",
     ],
     header_libs: [
         "generated_kernel_headers",
     ],
-    cflags: [ "-O3" ],
-    lto: { thin: true },
-    whole_program_vtables: true,
+    shared_libs: [
+        "libbase",
+        "liblog",
+        "libbinder_ndk",
+        "custom.hardware.biometrics.fingerprint.udfps-V1-ndk",
+    ],
 }

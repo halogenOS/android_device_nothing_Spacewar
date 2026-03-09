@@ -202,9 +202,8 @@ PRODUCT_PACKAGES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint-service.nothing
-
-$(call soong_config_set,surfaceflinger,udfps_lib,//device/nothing/Spacewar:libudfps_extension.nothing)
+    android.hardware.biometrics.fingerprint-service.nothing \
+    custom.hardware.biometrics.fingerprint.udfps-service.nothing
 
 # Health
 PRODUCT_PACKAGES += \

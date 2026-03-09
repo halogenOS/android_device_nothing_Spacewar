@@ -1,0 +1,7 @@
+<manifest version="1.0" type="device">
+    <hal format="aidl">
+        <name>custom.hardware.biometrics.fingerprint.udfps</name>
+        <version>1</version>
+        <fqname>IUdfpsExtension/default</fqname>
+    </hal>
+</manifest>
