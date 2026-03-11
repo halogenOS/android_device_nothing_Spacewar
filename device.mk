@@ -17,13 +17,19 @@ $(call inherit-product, vendor/nothing/Spacewar/Spacewar-vendor.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay \
     $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_PACKAGES += \
     NcmTetheringOverlay
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
+
+PRODUCT_PACKAGES += \
+    SpacewarFrameworks \
+    SpacewarSettings \
+    SpacewarSettingsProvider \
+    SpacewarSystemUI \
+    SpacewarTelephony
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
