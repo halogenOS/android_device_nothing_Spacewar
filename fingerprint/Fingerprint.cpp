@@ -180,6 +180,11 @@ ndk::ScopedAStatus Fingerprint::createSession(int32_t /*sensorId*/, int32_t user
 
     LOG(INFO) << "Creating session for user ID " << userId;
 
+    if (!mDevice) {
+        LOG(ERROR) << "No valid fingerprint device, cannot create session";
+        return ndk::ScopedAStatus::fromServiceSpecificError(-1);
+    }
+
     mSession = SharedRefBase::make<Session>(mDevice, userId, cb, mLockoutTracker, &mWorker);
     *out = mSession;
 
