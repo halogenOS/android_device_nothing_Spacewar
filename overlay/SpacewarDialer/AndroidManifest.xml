@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2024-2026 The halogenOS Project
+     SPDX-License-Identifier: Apache-2.0
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.dialer.overlay.spacewar">
+
+    <overlay
+        android:isStatic="true"
+        android:priority="200"
+        android:targetPackage="com.android.dialer" />
+</manifest>

@@ -16,12 +16,11 @@ $(call inherit-product, hardware/qcom-caf/common/common.mk)
 $(call inherit-product, vendor/nothing/Spacewar/Spacewar-vendor.mk)
 
 # Overlays
-DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-lineage
-
 PRODUCT_ENFORCE_RRO_TARGETS := *
 
 PRODUCT_PACKAGES += \
+    SpacewarAperture \
+    SpacewarDialer \
     SpacewarFrameworks \
     SpacewarSettings \
     SpacewarSettingsProvider \
