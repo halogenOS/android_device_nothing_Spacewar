@@ -14,6 +14,7 @@
 # HALs
 /vendor/bin/hw/android\.hardware\.biometrics\.fingerprint-service\.nothing                   u:object_r:hal_fingerprint_default_exec:s0
 /vendor/bin/hw/custom\.hardware\.biometrics\.fingerprint\.udfps-service\.nothing                         u:object_r:hal_custom_hardware_biometrics_fingerprint_udfps_default_exec:s0
+/vendor/bin/hw/vendor\.lineage\.health-service\.spacewar                                    u:object_r:hal_lineage_health_default_exec:s0
 
 # LEDs
 /sys/devices/platform/soc/984000.i2c/i2c-0/0-0020/leds/aw210xx_led(/.*)?                          u:object_r:sysfs_leds:s0
