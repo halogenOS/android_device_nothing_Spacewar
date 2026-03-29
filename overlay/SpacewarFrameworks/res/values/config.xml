@@ -316,6 +316,10 @@
         <item>500.0</item>
     </array>
 
+    <!-- Whether the HWC setColorTransform function can be performed efficiently in hardware.
+         Required for Night Light, Extra Dim, and other color transform features. -->
+    <bool name="config_setColorTransformAccelerated">true</bool>
+
     <!-- Nonlinear coefficients for maximum panel brightness of 500 nits -->
     <string-array name="config_reduceBrightColorsCoefficientsNonlinear">
         <!-- a-coefficient --> <item>-0.4553233597</item>
