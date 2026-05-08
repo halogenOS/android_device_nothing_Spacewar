@@ -22,6 +22,7 @@ PRODUCT_PACKAGES += \
     SpacewarAperture \
     SpacewarDialer \
     SpacewarFrameworks \
+    SpacewarLauncher3 \
     SpacewarSettings \
     SpacewarSettingsProvider \
     SpacewarSystemUI \
