@@ -17,6 +17,6 @@
   {
     "repository": "android_vendor_nothing_Spacewar",
     "target_path": "vendor/nothing/Spacewar",
-    "branch": "XOS-16.2"
+    "branch": "XOS-16.2.1"
   }
 ]
