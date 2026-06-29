@@ -1,0 +1,161 @@
+<displayConfiguration>
+    <screenBrightnessMap>
+        <point>
+            <value>0.0</value>
+            <nits>2.0</nits>
+        </point>
+        <point>
+            <value>0.02442</value>
+            <nits>2.7</nits>
+        </point>
+        <point>
+            <value>0.04884</value>
+            <nits>4.0</nits>
+        </point>
+        <point>
+            <value>0.10012</value>
+            <nits>10.0</nits>
+        </point>
+        <point>
+            <value>0.25617</value>
+            <nits>50.0</nits>
+        </point>
+        <point>
+            <value>0.37705</value>
+            <nits>100.0</nits>
+        </point>
+        <point>
+            <value>0.54505</value>
+            <nits>200.0</nits>
+        </point>
+        <point>
+            <value>0.66764</value>
+            <nits>300.0</nits>
+        </point>
+        <point>
+            <value>0.858364</value>
+            <nits>480.0</nits>
+        </point>
+        <point>
+            <value>0.99975</value>
+            <nits>672.0</nits>
+        </point>
+        <point>
+            <value>1.0</value>
+            <nits>1018.0</nits>
+        </point>
+    </screenBrightnessMap>
+    <highBrightnessMode enabled="true">
+        <transitionPoint>0.858364</transitionPoint>
+        <minimumLux>7000.0</minimumLux>
+        <timing>
+            <!-- Time limitation for HBM-->
+            <timeWindowSecs>0</timeWindowSecs>
+            <timeMaxSecs>0</timeMaxSecs>
+            <timeMinSecs>0</timeMinSecs>
+        </timing>
+        <!-- Thermal limitation for HBM -->
+        <thermalStatusLimit>critical</thermalStatusLimit>
+        <minimumHdrPercentOfScreen>0.4</minimumHdrPercentOfScreen>
+        <!--sdrHdrRatioMap, backed by spline, must have at least two entries -->
+        <sdrHdrRatioMap>
+            <point>
+                <sdrNits>2.0</sdrNits>
+                <hdrRatio>4.5</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>100.0</sdrNits>
+                <hdrRatio>4.0</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>200.0</sdrNits>
+                <hdrRatio>2.2</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>300.0</sdrNits>
+                <hdrRatio>1.8</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>400.0</sdrNits>
+                <hdrRatio>1.5</hdrRatio>
+            </point>
+            <point>
+                <sdrNits>480.0</sdrNits>
+                <hdrRatio>1.4</hdrRatio>
+            </point>
+        </sdrHdrRatioMap>
+    </highBrightnessMode>
+    <!-- The panel DBV scale is gamma 2.2 encoded (the screenBrightnessMap above is the
+         measured backlight -> nits curve), while the framework brightness slider assumes a
+         backlight value proportional to luminance. With gamma applied twice the lower half of
+         the slider collapsed into the 2-4 nit range and produced no visible brightness change.
+         Remap the framework brightness scale to be linear in nits (brightness = nits / 1018,
+         the panel peak) so the slider gamma curve lands on actual luminance. The extended
+         dimming part of the feature is neutralized: the minimum stays at the panel floor
+         (2.0 nits) for all lux values. backlight/nits below are the measured panel curve. -->
+    <evenDimmer enabled="true">
+        <transitionPoint>0.0019646</transitionPoint>
+        <brightnessMapping>
+            <brightnessPoint>
+                <nits>2.0</nits>
+                <backlight>0.04</backlight>
+                <brightness>0.0019646</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>4.0</nits>
+                <backlight>0.04884</backlight>
+                <brightness>0.0039293</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>10.0</nits>
+                <backlight>0.10012</backlight>
+                <brightness>0.0098232</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>50.0</nits>
+                <backlight>0.25617</backlight>
+                <brightness>0.0491159</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>100.0</nits>
+                <backlight>0.37705</backlight>
+                <brightness>0.0982318</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>200.0</nits>
+                <backlight>0.54505</backlight>
+                <brightness>0.1964637</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>300.0</nits>
+                <backlight>0.66764</backlight>
+                <brightness>0.2946955</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>480.0</nits>
+                <backlight>0.858364</backlight>
+                <brightness>0.4715128</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>672.0</nits>
+                <backlight>0.99975</backlight>
+                <brightness>0.6601179</brightness>
+            </brightnessPoint>
+            <brightnessPoint>
+                <nits>1018.0</nits>
+                <backlight>1.0</backlight>
+                <brightness>1.0</brightness>
+            </brightnessPoint>
+        </brightnessMapping>
+        <luxToMinimumNitsMap>
+            <point>
+                <value>0.0</value>
+                <nits>2.0</nits>
+            </point>
+            <point>
+                <value>100000.0</value>
+                <nits>2.0</nits>
+            </point>
+        </luxToMinimumNitsMap>
+    </evenDimmer>
+</displayConfiguration>
