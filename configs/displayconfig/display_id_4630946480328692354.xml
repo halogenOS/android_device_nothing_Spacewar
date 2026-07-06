@@ -90,12 +90,22 @@
          backlight value proportional to luminance. With gamma applied twice the lower half of
          the slider collapsed into the 2-4 nit range and produced no visible brightness change.
          Remap the framework brightness scale to be linear in nits (brightness = nits / 1018,
-         the panel peak) so the slider gamma curve lands on actual luminance. The extended
-         dimming part of the feature is neutralized: the minimum stays at the panel floor
-         (2.0 nits) for all lux values. backlight/nits below are the measured panel curve. -->
+         the panel peak) so the slider gamma curve lands on actual luminance.
+
+         The extended-dim range is kept live so Extra Dim works: transitionPoint is the panel
+         hardware floor (2.0 nits); below it the backlight sits at its minimum and the reduce
+         bright colors matrix takes over, down to the sub-floor mapping point (0.2 nits at
+         backlight 0). luxToMinimumNitsMap sets how far Extra Dim may dim per ambient lux
+         (lower in the dark, back up to the 2.0 nit floor in bright rooms). backlight/nits at
+         and above 2.0 are the measured panel curve. -->
     <evenDimmer enabled="true">
         <transitionPoint>0.0019646</transitionPoint>
         <brightnessMapping>
+            <brightnessPoint>
+                <nits>0.2</nits>
+                <backlight>0.0</backlight>
+                <brightness>0.0</brightness>
+            </brightnessPoint>
             <brightnessPoint>
                 <nits>2.0</nits>
                 <backlight>0.04</backlight>
@@ -150,10 +160,22 @@
         <luxToMinimumNitsMap>
             <point>
                 <value>0.0</value>
-                <nits>2.0</nits>
+                <nits>0.2</nits>
             </point>
             <point>
-                <value>100000.0</value>
+                <value>10.0</value>
+                <nits>0.3</nits>
+            </point>
+            <point>
+                <value>50.0</value>
+                <nits>0.7</nits>
+            </point>
+            <point>
+                <value>100.0</value>
+                <nits>1.2</nits>
+            </point>
+            <point>
+                <value>300.0</value>
                 <nits>2.0</nits>
             </point>
         </luxToMinimumNitsMap>
