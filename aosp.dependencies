@@ -4,7 +4,7 @@
     "target_path": "kernel/nothing/sm7325"
   },
   {
-    "repository": "android_hardware_nothing",
-    "target_path": "hardware/nothing"
+    "repository": "android_vendor_nothing_Spacewar",
+    "target_path": "vendor/nothing/Spacewar"
   }
 ]
