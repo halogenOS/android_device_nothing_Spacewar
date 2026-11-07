@@ -4,6 +4,10 @@
     "target_path": "kernel/nothing/sm7325"
   },
   {
+    "repository": "android_packages_apps_Glyph",
+    "target_path": "packages/apps/Glyph"
+  },
+  {
     "repository": "android_vendor_nothing_Spacewar",
     "target_path": "vendor/nothing/Spacewar"
   }

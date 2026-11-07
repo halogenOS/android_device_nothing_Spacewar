@@ -34,7 +34,7 @@ PRODUCT_PACKAGES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
-    hardware/nothing \
+    packages/apps/Glyph \
     hardware/google/interfaces \
     hardware/google/pixel/power-libperfmgr \
     hardware/qcom-caf/common/libqti-perfd-client \
@@ -67,10 +67,9 @@ TARGET_SCREEN_WIDTH := 1080
 # Shipping API level
 PRODUCT_SHIPPING_API_LEVEL := 31
 
-# Paranoid Glyph
+# Glyph
 PRODUCT_PACKAGES += \
-    ParanoidGlyphPhone1 \
-    GlyphAdapter
+    GlyphSpacewar
 
 # Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true

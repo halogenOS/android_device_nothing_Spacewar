@@ -1,0 +1,3 @@
+# Glyph app and the Glyph Developer Kit bridge
+user=system seinfo=platform isPrivApp=true name=custom.glyph domain=glyph_app type=system_app_data_file levelFrom=all
+user=system seinfo=platform name=com.nothing.thirdparty domain=glyph_app type=system_app_data_file levelFrom=all
