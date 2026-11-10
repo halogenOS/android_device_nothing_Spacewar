@@ -353,4 +353,17 @@ echo s2idle > /sys/power/mem_sleep
 
 configure_memory_parameters
 
+# Kodiak parts have a defective CDSP: fastrpc reports it as absent, and its daemon is not started
+if [ "$(cat /sys/devices/soc0/chip_family 2>/dev/null)" = "0x76" ] && \
+		[ "$(cat /sys/devices/platform/soc/soc:qcom,msm_fastrpc/remote_cdsp_status 2>/dev/null)" = "0" ]; then
+	setprop vendor.fastrpc.disable.cdsprpcd.daemon 1
+fi
+
+if [ -f /sys/devices/soc0/select_image ]; then
+	echo 10 > /sys/devices/soc0/select_image
+	echo "10:$(getprop ro.build.id):$(getprop ro.build.version.incremental)" > /sys/devices/soc0/image_version
+	echo "$(getprop ro.product.name)-$(getprop ro.build.type)" > /sys/devices/soc0/image_variant
+	getprop ro.build.version.codename > /sys/devices/soc0/image_crm_version
+fi
+
 setprop vendor.post_boot.parsed 1
